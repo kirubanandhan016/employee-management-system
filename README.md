@@ -211,13 +211,15 @@ Tests run against an isolated in-memory SQLite database with foreign keys enable
 
 ---
 
-## 7. Demo Accounts (Seeded Automatically when `SEED_DEMO_DATA=true (development only)`)
+## 7. Development Demo Accounts (Development Only)
 
 | Role | Email | Password |
 | :--- | :--- | :--- |
 | **Admin** | `admin@company.com` | `Admin@123` |
 | **HR Manager** | `hr@company.com` | `HrManager@123` |
 | **Employee** | `employee@company.com` | `Employee@123` |
+
+These fixed demo credentials are for local development only. Demo seeding is disabled by default and is never enabled outside the development environment. Do not enable it in production.
 
 ---
 
