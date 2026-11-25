@@ -3,7 +3,7 @@
 from functools import lru_cache
 from typing import List
 
-from pydantic import field_validator
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -35,6 +35,16 @@ class Settings(BaseSettings):
         case_sensitive=True,
         extra="ignore",
     )
+
+    @model_validator(mode="after")
+    def reject_insecure_production_secret(self) -> "Settings":
+        """Prevent production from silently using the checked-in development key."""
+        if self.ENVIRONMENT.lower() in {"production", "prod"}:
+            if self.SECRET_KEY == "dev-insecure-secret-key-change-in-production-at-least-32-chars":
+                raise ValueError("SECRET_KEY must be explicitly configured in production")
+            if len(self.SECRET_KEY) < 32:
+                raise ValueError("SECRET_KEY must contain at least 32 characters")
+        return self
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
