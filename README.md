@@ -231,3 +231,65 @@ Tests run against an isolated in-memory SQLite database with foreign keys enable
 - **Leaves**: `POST /leaves`, `GET /leaves`, `PATCH /leaves/{id}/review`, `POST /leaves/{id}/cancel`
 - **Salaries**: `GET /salaries/summary`, `GET /salaries`, `POST /salaries`, `PUT /salaries/{id}`, `DELETE /salaries/{id}`
 - **Dashboard**: `GET /dashboard/overview`
+
+## Architecture
+
+The repository is split into a React client, a FastAPI service, and PostgreSQL persistence. Alembic owns schema evolution; the API layer delegates business operations to service modules and uses SQLAlchemy models for persistence.
+
+```mermaid
+flowchart LR
+    Browser[React + Vite UI] -->|HTTP /api/v1| API[FastAPI application]
+    API --> Auth[Authentication and RBAC]
+    API --> Services[Domain services]
+    Services --> ORM[SQLAlchemy models]
+    ORM --> DB[(PostgreSQL)]
+    Migrations[Alembic migrations] --> DB
+    API --> Health[/health]
+```
+
+## Local development and verification
+
+Run the API from `backend/` after configuring its environment:
+
+```bash
+cd backend
+python -m venv .venv
+# Activate the virtual environment, then:
+pip install -r requirements.txt
+alembic upgrade head
+uvicorn app.main:app --reload
+```
+
+Run the backend test suite from the same directory:
+
+```bash
+pytest
+```
+
+Build the frontend from `frontend/`:
+
+```bash
+npm ci
+npm run build
+```
+
+For the full container stack, configure the root `.env` file using the checked-in environment examples, then run:
+
+```bash
+docker compose up --build
+```
+
+The API OpenAPI UI is available at `http://localhost:8000/docs`; the web client is served at `http://localhost:3000`.
+
+## Deployment and security notes
+
+- Replace all development credentials and the JWT signing key before deployment. Keep secrets in the deployment platform's secret store; never commit a populated `.env` file.
+- Set `CORS_ORIGINS` to the exact trusted frontend origins. Avoid wildcard origins when credentials are enabled.
+- Run Alembic migrations as a controlled release step and take database backups before production migrations.
+- The compose file is a convenient single-host deployment baseline, not a substitute for production TLS termination, secret management, observability, backups, and resource limits.
+- Do not expose PostgreSQL's port publicly unless operationally required.
+
+## Screenshots
+
+Add current application screenshots to `docs/screenshots/` and link them here after capturing the running application. No screenshots are embedded yet, so this README does not imply that unverified UI captures exist.
+
