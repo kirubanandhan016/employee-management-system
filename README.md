@@ -287,6 +287,16 @@ The API OpenAPI UI is available at `http://localhost:8000/docs`; the web client 
 - Set `CORS_ORIGINS` to the exact trusted frontend origins. Avoid wildcard origins when credentials are enabled.
 - Run Alembic migrations as a controlled release step and take database backups before production migrations.
 - The compose file is a convenient single-host deployment baseline, not a substitute for production TLS termination, secret management, observability, backups, and resource limits.
+
+For the Compose stack, first copy the root environment template and replace both occurrences of the database password placeholder with the same unique URL-safe password. Generate a signing key rather than using the example placeholder:
+
+```bash
+cp .env.example .env
+python -c "import secrets; print(secrets.token_urlsafe(48))"
+```
+
+Set the generated value as `SECRET_KEY` in `.env`, then run `docker compose up --build`. On Windows PowerShell, use `Copy-Item .env.example .env` for the copy step. Compose now fails fast if the database password or signing key is missing. PostgreSQL is bound to localhost for local development.
+
 - Do not expose PostgreSQL's port publicly unless operationally required.
 
 ## Screenshots
