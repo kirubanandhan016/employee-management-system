@@ -211,7 +211,7 @@ Tests run against an isolated in-memory SQLite database with foreign keys enable
 
 ---
 
-## 7. Demo Accounts (Seeded Automatically when `SEED_DEMO_DATA=true`)
+## 7. Demo Accounts (Seeded Automatically when `SEED_DEMO_DATA=true (development only)`)
 
 | Role | Email | Password |
 | :--- | :--- | :--- |
