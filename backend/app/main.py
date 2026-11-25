@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.config import get_settings
+from app.core.config import get_settings, should_seed_demo_data
 from app.core.exceptions import register_exception_handlers
 from app.database import SessionLocal
 from app.routers import api_router
@@ -19,7 +19,7 @@ settings = get_settings()
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     """Run optional demo data seeding in development mode on startup."""
-    if settings.SEED_DEMO_DATA and settings.ENVIRONMENT != "test":
+    if should_seed_demo_data(settings.ENVIRONMENT, settings.SEED_DEMO_DATA):
         db = SessionLocal()
         try:
             seed_demo_data(db)
