@@ -231,3 +231,17 @@ Tests run against an isolated in-memory SQLite database with foreign keys enable
 - **Leaves**: `POST /leaves`, `GET /leaves`, `PATCH /leaves/{id}/review`, `POST /leaves/{id}/cancel`
 - **Salaries**: `GET /salaries/summary`, `GET /salaries`, `POST /salaries`, `PUT /salaries/{id}`, `DELETE /salaries/{id}`
 - **Dashboard**: `GET /dashboard/overview`
+
+
+## Engineering documentation
+
+- [System architecture](docs/ARCHITECTURE.md)
+- [Database ER diagram](docs/ER_DIAGRAM.md)
+- [API request examples](docs/API_EXAMPLES.md)
+- Swagger/OpenAPI: `http://localhost:8000/docs` after starting the stack.
+- Root, backend, and frontend environment templates are provided as `.env.example` files. Copy the relevant template and replace placeholders locally; never commit secrets.
+- Backend tests: run `pytest` from `backend/`; see the test suite and CI workflow.
+
+## Screenshots and deployment
+
+A verified public deployment URL and real screenshots are not documented yet. Capture the Admin, HR, and Employee views plus Swagger UI using seeded demo data only. Never expose real employee or salary information. Store approved images under `docs/screenshots/` and add a public URL only after deploying and verifying both frontend and backend health.
